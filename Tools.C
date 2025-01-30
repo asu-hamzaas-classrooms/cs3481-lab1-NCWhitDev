@@ -43,7 +43,15 @@
 */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
-  return 0;
+	uint64_t total = 0;
+	for(int i = LONGSIZE - 1; i > 0; i--)
+	{
+		uint64_t n = bytes[i];
+		total = n ^ total;
+		total = total << 8;
+	}
+	total = (uint64_t) bytes[0] ^ total;
+ 	 return total;
 }
 
 /** 
@@ -66,8 +74,17 @@ uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
  * 2) no loops or conditionals (other than for 1) or switch
 */
 uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
-{
-  return 0;
+{ 
+	if(byteNum > 7 || byteNum < 0)
+	{
+		return 0;
+	}
+
+	int32_t bn = byteNum * 8;
+	uint64_t number = source >> bn;
+	number = number & 0xFF;
+
+  	return number;
 }
 
 /**
