@@ -114,7 +114,17 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+	if(low < 0 || high > 63)
+	{
+		return 0;
+	}
+
+	int32_t newhigh = 63 - high;
+	source = source << newhigh;
+	newhigh = newhigh + low;
+	source = source >> newhigh;
+
+  	return source;
 }
 
 
@@ -142,7 +152,11 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+	
+
+
+
+  	return source;
 }
 
 /**
