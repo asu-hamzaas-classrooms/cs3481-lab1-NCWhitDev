@@ -152,8 +152,19 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-	
+	if(low < 0 || high > 63)
+	{
+		return source;
+	}
 
+	int32_t newhigh = 63 - high;
+	u_int64_t mask = 0xFFFFFFFFFFFFFFFF;
+	mask = mask << newhigh;
+	newhigh = newhigh + low;
+	mask = mask >> newhigh;
+	mask = mask << low;
+
+	source = source | mask;
 
 
   	return source;
@@ -181,6 +192,15 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
+	if(low < 0 || high > 63)
+	{
+		return source;
+	}
+
+	int64_t mask = 0x00;
+
+
+
   return 0;
 }
 
