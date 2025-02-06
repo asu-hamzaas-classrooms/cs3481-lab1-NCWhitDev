@@ -243,16 +243,21 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-	if(srclow < 0 || srclow > 63 || dstlow < 0 || dstlow > 63 
-		|| dstlow == 63 && length > 0|| srclow == 63 && length > 0)
+	if(srclow < 0 || srclow > 63 || dstlow < 0 || dstlow > 63 || srclow + length > 64 
+		|| dstlow + length > 64)
 	{
 		return dest;
 	}
 
+	//returns source but only target bits.
+	source = getBits(source,srclow,srclow+length-1);
+	int32_t val = dstlow;
+	source = source << val;
 	
+	//returns dest but clear targeted section.
+	dest = clearBits(dest, dstlow, dstlow+length-1);
+	dest = dest | source;
 
-
-	
    return dest; 
 }
 
@@ -280,11 +285,11 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
 	//what if byteNum is out of range
 	
-	//Find a wau to overwrite a byte. byte = 8 bits.
-	uint64_t mask = 0xFFFFFFFFFFFFFFFF;
-	
 
-   return source;
+	//Find a way to overwrite a byte. byte = 8 bits.
+	int32_t low = byteNum * 8;
+	int32_t high = low + 7;
+    return setBits(source, low, high);;
 }
 
 
@@ -306,7 +311,15 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::sign(uint64_t source)
 {
-  return 0;
+	if(getBits(source, 56, 63) < 0x88)
+	{
+		return 0;
+	}	
+	else
+	{
+		return 1;
+	}
+
 }
 
 /**
@@ -336,6 +349,8 @@ bool Tools::addOverflow(uint64_t op1, uint64_t op2)
   //      Thus, the way to check for an overflow is to compare the signs of the
   //      operand and the result.  For example, if you add two positive numbers, 
   //      the result should be positive, otherwise an overflow occurred.
+
+  
   return false;
 }
 
