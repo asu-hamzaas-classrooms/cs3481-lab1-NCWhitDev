@@ -172,8 +172,7 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 
 /**
  * clears the bits of source in the range low to high to 0 (clears them) and
- * returns that value. returns source if the low or high
- * bit numbers are out of range
+ * returns that value. returns source if the low or high bit numbers are out of range
  *
  * for example, clearBits(0x1122334455667788, 0, 7) returns 0x1122334455667700
  *              clearBits(0x1122334455667788, 8, f) returns 0x1122334455660088
@@ -192,16 +191,28 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
-	if(low < 0 || high > 63)
+	if(low < 0 || high > 63 || low > high)
 	{
 		return source;
 	}
+	if(low == 0 && high == 0)
+	{
+		u_int64_t maskC1 = 0x01;
+		maskC1 = ~maskC1;
+		source = source & maskC1;
+		return source;
+	}
+	int32_t newhigh = 63 - high;
+	u_int64_t mask = ~0x0;
+	mask = mask << newhigh;
+	newhigh = newhigh + low;
+	mask = mask >> newhigh;
+	mask = mask << low;
 
-	int64_t mask = 0x00;
+	mask = ~mask;
+	source = source & mask;
 
-
-
-  return 0;
+	return source;
 }
 
 
@@ -232,7 +243,17 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0; 
+	if(srclow < 0 || srclow > 63 || dstlow < 0 || dstlow > 63 
+		|| dstlow == 63 && length > 0|| srclow == 63 && length > 0)
+	{
+		return dest;
+	}
+
+	
+
+
+	
+   return dest; 
 }
 
 
@@ -257,7 +278,13 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-  return 0;
+	//what if byteNum is out of range
+	
+	//Find a wau to overwrite a byte. byte = 8 bits.
+	uint64_t mask = 0xFFFFFFFFFFFFFFFF;
+	
+
+   return source;
 }
 
 
