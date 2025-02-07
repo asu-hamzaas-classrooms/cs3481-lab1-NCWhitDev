@@ -311,15 +311,7 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::sign(uint64_t source)
 {
-	if(getBits(source, 56, 63) < 0x88)
-	{
-		return 0;
-	}	
-	else
-	{
-		return 1;
-	}
-
+	return getBits(source,63,63);
 }
 
 /**
@@ -350,8 +342,16 @@ bool Tools::addOverflow(uint64_t op1, uint64_t op2)
   //      operand and the result.  For example, if you add two positive numbers, 
   //      the result should be positive, otherwise an overflow occurred.
 
-  
-  return false;
+	if((sign(op1) == 1 && sign(op2) == 1 && sign(op1 + op2) == 1)
+		|| (sign(op1) == 0 && sign(op2) == 0 && sign(op1 + op2) == 0) 
+		|| (sign(op1) == 1 && sign(op2) == 0 && sign(op1 + op2) == 1)
+		|| (sign(op1) == 0 && sign(op2) == 1 && sign(op1 + op2) == 1))
+	{
+		return 0;
+	}
+	else{
+		return 1;
+	}
 }
 
 /**
@@ -380,5 +380,15 @@ bool Tools::subOverflow(uint64_t op1, uint64_t op2)
   //Note: you can not simply use addOverflow in this function.  If you negate
   //op1 in order to an add, you may get an overflow. 
   //NOTE: the subtraction is op2 - op1 (not op1 - op2).
-  return false;
+
+	if((sign(op1) == 1 && sign(op2) == 1 && sign(op2 - op1) == 1)
+	|| (sign(op1) == 1 && sign(op2) == 0 && sign(op2 - op1) == 0)
+	|| (sign(op1) == 1 && sign(op2) == 1 && sign(op2 - op1) == 1)
+	|| (sign(op1) == 0 && sign(op2) == 1 && sign(op2 - op1) == 1))
+	{
+		return 0;
+	}
+	else{
+		return 1;
+	}
 }
