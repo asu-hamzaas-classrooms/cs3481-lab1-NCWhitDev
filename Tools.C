@@ -381,11 +381,11 @@ bool Tools::subOverflow(uint64_t op1, uint64_t op2)
   //op1 in order to an add, you may get an overflow. 
   //NOTE: the subtraction is op2 - op1 (not op1 - op2).
 
-	if((sign(op1) == 1 && sign(op2) == 1 && sign(op2 - op1) == 1)
+	if((sign(op1) == 1 && sign(op2) == 1 && sign(op2 - op1) == 0)
 	|| (sign(op1) == 1 && sign(op2) == 0 && sign(op2 - op1) == 0)
 	|| (sign(op1) == 1 && sign(op2) == 1 && sign(op2 - op1) == 1)
-	|| (sign(op1) == 0 && sign(op2) == 1 && sign(op2 - op1) == 1))
-	{
+	|| (sign(op1) == 0 && sign(op2) == 1 && sign(op2 - op1) == 1)
+	|| (sign(op1) == 0 && sign(op2) == 0 && sign(op2 - op1) == 0)){
 		return 0;
 	}
 	else{
